@@ -6,7 +6,7 @@ import axios from 'axios'
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-axios.get('https://api.github.com/users/krsnyder')
+// console.log(axios.get('https://api.github.com/users/krsnyder'))
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -19,6 +19,13 @@ axios.get('https://api.github.com/users/krsnyder')
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+const cards = document.querySelector('.cards')
+axios.get('https://api.github.com/users/krsnyder')
+  .then(res => {
+    cards.appendChild(userCard(res.data))
+  })
+
+
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -31,7 +38,18 @@ axios.get('https://api.github.com/users/krsnyder')
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['jskelcy', 'VitalikButerinDEV', 'joalorro', 'tetondan', 'dustinmyers'];
+
+function getCards(users) {
+  users.forEach(user => {
+    axios.get(`https://api.github.com/users/${user}`)
+  .then(res => {
+    cards.appendChild(userCard(res.data))
+  })
+  });
+}
+
+getCards(followersArray)
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -53,7 +71,7 @@ const followersArray = [];
     </div>
 */
 
-function func({avatar_url, name, login, location, html_url, followers_url, following_url, bio}) {
+function userCard({avatar_url, name, login, location, html_url, followers_url, following_url, bio}) {
   let card = document.createElement('div')
   card.classList.add('card')
 
@@ -84,7 +102,7 @@ function func({avatar_url, name, login, location, html_url, followers_url, follo
   link.textContent = html_url
 
   let profile = document.createElement('p')
-  profile.textContent = `Profile: ${link}`
+  profile.textContent = `Profile: ${link.textContent}`
   cardInfo.appendChild(profile)
 
   let follower = document.createElement('p')
